@@ -2,6 +2,7 @@ package com.edulearn.course.service;
 
 import com.edulearn.auth.entity.User;
 import com.edulearn.auth.repository.UserRepository;
+import com.edulearn.common.Constants;
 import com.edulearn.common.util.SlugUtils;
 import com.edulearn.course.dto.CourseCreateRequest;
 import com.edulearn.course.dto.CourseResponse;
@@ -20,6 +21,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +38,7 @@ public class CourseService {
     private final CoursePermissionService permissionService;
 
     @Transactional(readOnly = true)
+    @Cacheable(value = Constants.CACHE_PUBLISHED_COURSES, key = "'all'")
     public List<CourseResponse> getPublishedCourses() {
         return courseRepository.findByStatusOrderByPublishedAtDesc(CourseStatus.PUBLISHED)
                 .stream()
@@ -66,6 +70,7 @@ public class CourseService {
     }
 
     @Transactional
+    @CacheEvict(value = Constants.CACHE_PUBLISHED_COURSES, allEntries = true)
     public CourseResponse create(CourseCreateRequest request, String actorEmail) {
         User actor = permissionService.getActor(actorEmail);
         permissionService.requireInstructorOrAdmin(actor);
@@ -91,6 +96,7 @@ public class CourseService {
     }
 
     @Transactional
+    @CacheEvict(value = Constants.CACHE_PUBLISHED_COURSES, allEntries = true)
     public CourseResponse update(Long courseId, CourseUpdateRequest request, String actorEmail) {
         User actor = permissionService.getActor(actorEmail);
         Course course = getEntity(courseId);
@@ -131,6 +137,7 @@ public class CourseService {
     }
 
     @Transactional
+    @CacheEvict(value = Constants.CACHE_PUBLISHED_COURSES, allEntries = true)
     public CourseResponse publish(Long courseId, String actorEmail) {
         User actor = permissionService.getActor(actorEmail);
         Course course = getEntity(courseId);
@@ -159,6 +166,7 @@ public class CourseService {
     }
 
     @Transactional
+    @CacheEvict(value = Constants.CACHE_PUBLISHED_COURSES, allEntries = true)
     public CourseResponse archive(Long courseId, String actorEmail) {
         User actor = permissionService.getActor(actorEmail);
         Course course = getEntity(courseId);
@@ -169,6 +177,7 @@ public class CourseService {
     }
 
     @Transactional
+    @CacheEvict(value = Constants.CACHE_PUBLISHED_COURSES, allEntries = true)
     public void delete(Long courseId, String actorEmail) {
         User actor = permissionService.getActor(actorEmail);
         Course course = getEntity(courseId);

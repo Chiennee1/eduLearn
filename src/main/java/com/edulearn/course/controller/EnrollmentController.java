@@ -9,6 +9,7 @@ import com.edulearn.course.dto.LessonProgressUpdateRequest;
 import com.edulearn.course.service.CertificateService;
 import com.edulearn.course.service.EnrollmentService;
 import com.edulearn.course.service.LearningProgressService;
+import com.edulearn.payment.service.PaymentOrderService;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ public class EnrollmentController {
     private final EnrollmentService enrollmentService;
     private final LearningProgressService learningProgressService;
     private final CertificateService certificateService;
+    private final PaymentOrderService paymentOrderService;
 
     @PostMapping("/courses/{courseId}/enrollments")
     @PreAuthorize("hasRole('STUDENT')")
@@ -38,7 +40,9 @@ public class EnrollmentController {
             @PathVariable Long courseId,
             Authentication authentication
     ) {
-        EnrollmentResponse response = enrollmentService.enroll(courseId, authentication.getName());
+        EnrollmentResponse response = paymentOrderService
+                .checkoutEnrollment(courseId, null, authentication.getName())
+                .getEnrollment();
         return ResponseEntity.ok(ApiResponse.success("Enrolled successfully", response));
     }
 
