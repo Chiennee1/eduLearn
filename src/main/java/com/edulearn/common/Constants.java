@@ -8,6 +8,8 @@ public final class Constants {
     public static final String CATEGORY_API_PREFIX = API_V1_PREFIX + "/categories";
     public static final String SECTION_API_PREFIX = API_V1_PREFIX + "/sections";
     public static final String LESSON_API_PREFIX = API_V1_PREFIX + "/lessons";
+    public static final String ENROLLMENT_API_PREFIX = API_V1_PREFIX + "/enrollments";
+    public static final String LEARNING_API_PREFIX = API_V1_PREFIX + "/learning";
     public static final String BEARER_PREFIX = "Bearer ";
     public static final String ROLE_PREFIX = "ROLE_";
 
