@@ -25,3 +25,16 @@ app:
     access-token-minutes: ${JWT_ACCESS_MINUTES:30}
     refresh-token-days: ${JWT_REFRESH_DAYS:14}
     issuer: ${JWT_ISSUER:edulearn}
+  anthropic:
+    enabled: ${ANTHROPIC_ENABLED:false}
+    base-url: ${ANTHROPIC_BASE_URL:https://api.anthropic.com}
+    api-key: ${ANTHROPIC_API_KEY:}
+    model: ${ANTHROPIC_MODEL:claude-3-5-sonnet-latest}
+    max-tokens: ${ANTHROPIC_MAX_TOKENS:512}
+    version: ${ANTHROPIC_VERSION:2023-06-01}
+    connect-timeout-ms: ${ANTHROPIC_CONNECT_TIMEOUT_MS:3000}
+    read-timeout-ms: ${ANTHROPIC_READ_TIMEOUT_MS:30000}
+  chat:
+    rate-limit:
+      max-requests: ${CHAT_RATE_LIMIT_MAX_REQUESTS:20}
+      window-seconds: ${CHAT_RATE_LIMIT_WINDOW_SECONDS:60}
