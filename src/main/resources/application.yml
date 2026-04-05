@@ -15,6 +15,23 @@ spring:
         format_sql: true
   jackson:
     time-zone: Asia/Ho_Chi_Minh
+  cache:
+    type: redis
+    redis:
+      time-to-live: 5m
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      timeout: ${REDIS_TIMEOUT:2000ms}
+  mail:
+    host: ${MAIL_HOST:localhost}
+    port: ${MAIL_PORT:1025}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail.smtp.auth: ${MAIL_SMTP_AUTH:false}
+      mail.smtp.starttls.enable: ${MAIL_SMTP_STARTTLS:false}
 
 server:
   port: ${SERVER_PORT:8080}
@@ -38,3 +55,10 @@ app:
     rate-limit:
       max-requests: ${CHAT_RATE_LIMIT_MAX_REQUESTS:20}
       window-seconds: ${CHAT_RATE_LIMIT_WINDOW_SECONDS:60}
+  email:
+    enabled: ${APP_EMAIL_ENABLED:false}
+    from: ${APP_EMAIL_FROM:noreply@edulearn.com}
+  logging:
+    execution:
+      enabled: ${EXECUTION_LOG_ENABLED:true}
+      warn-threshold-ms: ${EXECUTION_LOG_WARN_THRESHOLD_MS:500}

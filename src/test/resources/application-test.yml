@@ -11,6 +11,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
+  cache:
+    type: simple
 
 app:
   jwt:
@@ -26,3 +28,8 @@ app:
     rate-limit:
       max-requests: 2
       window-seconds: 60
+  email:
+    enabled: false
+  logging:
+    execution:
+      enabled: false

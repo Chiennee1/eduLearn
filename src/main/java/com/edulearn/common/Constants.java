@@ -13,6 +13,8 @@ public final class Constants {
     public static final String QUIZ_API_PREFIX = API_V1_PREFIX + "/quizzes";
     public static final String REVIEW_API_PREFIX = API_V1_PREFIX + "/reviews";
     public static final String CHAT_API_PREFIX = API_V1_PREFIX + "/chat";
+    public static final String ADMIN_API_PREFIX = API_V1_PREFIX + "/admin";
+    public static final String CACHE_PUBLISHED_COURSES = "courses:published";
     public static final String BEARER_PREFIX = "Bearer ";
     public static final String ROLE_PREFIX = "ROLE_";
 
