@@ -1,6 +1,6 @@
 package com.edulearn.auth;
 
-import edulearn.com.spring_web.EduLearnApplication;
+import com.edulearn.EduLearnApplication;
 import com.edulearn.auth.dto.LoginRequest;
 import com.edulearn.auth.dto.RefreshTokenRequest;
 import com.edulearn.auth.dto.RegisterRequest;

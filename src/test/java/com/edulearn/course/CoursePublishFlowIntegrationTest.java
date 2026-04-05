@@ -1,6 +1,6 @@
 package com.edulearn.course;
 
-import edulearn.com.spring_web.EduLearnApplication;
+import com.edulearn.EduLearnApplication;
 import com.edulearn.auth.entity.Role;
 import com.edulearn.auth.entity.RoleName;
 import com.edulearn.auth.entity.User;
