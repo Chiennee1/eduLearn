@@ -1,30 +1,102 @@
-# EduLearn Spring Web - Quick Start (VI/EN)
+# EduLearn Backend (Spring Boot) - Quick Start (VI/EN)
 
-Tai lieu onboarding 1 trang cho dev moi. | One-page onboarding guide for new developers.
+Backend REST API for an e-learning platform with auth, course management, enrollment, quiz, review, payment, chatbot, and admin analytics.
 
-Xem tai lieu ky thuat chi tiet: `README_FULL.md`.
+Backend REST API cho nen tang hoc truc tuyen, bao gom auth, quan ly khoa hoc, enrollment, quiz, review, payment, chatbot, va admin analytics.
 
-## 1) Prerequisites
+> Full technical documentation: `README_FULL.md`
+
+## Table of Contents
+
+- [Project Overview](#project-overview)
+- [Core Features](#core-features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Quick Start](#quick-start)
+- [Run Tests](#run-tests)
+- [API Snapshot](#api-snapshot)
+- [Role Matrix](#role-matrix)
+- [Troubleshooting](#troubleshooting)
+- [Documentation](#documentation)
+
+## Project Overview
+
+- VI: Du an `spring-web` xay dung theo layered architecture (`controller -> service -> repository -> entity`).
+- EN: `spring-web` follows a layered architecture (`controller -> service -> repository -> entity`).
+- VI: API base path hien tai la `/api/v1`.
+- EN: Current API base path is `/api/v1`.
+
+## Core Features
+
+- VI: Auth + JWT + refresh token + role-based authorization (`ADMIN`, `INSTRUCTOR`, `STUDENT`).
+- EN: Auth + JWT + refresh token + role-based authorization (`ADMIN`, `INSTRUCTOR`, `STUDENT`).
+- VI: Course module day du (`category/course/section/lesson`) + publish flow.
+- EN: Full course module (`category/course/section/lesson`) + publish flow.
+- VI: Enrollment + learning progress + certificate generation.
+- EN: Enrollment + learning progress + certificate generation.
+- VI: Quiz engine (question/option), auto-grade, quiz history filter.
+- EN: Quiz engine (question/option), auto-grade, quiz history filtering.
+- VI: Review/rating + like/unlike + course stats update.
+- EN: Review/rating + like/unlike + course stats recalculation.
+- VI: Payment order flow, Redis caching, chatbot (Anthropic integration + conversation history), admin dashboard.
+- EN: Payment order flow, Redis caching, chatbot (Anthropic integration + conversation history), admin dashboard.
+
+## Tech Stack
+
+- Java 17
+- Spring Boot 3.5.13
+- Spring Web, Validation, Security, Data JPA
+- Spring Cache + Redis + Spring Session Redis
+- Spring AOP, Spring Mail
+- MySQL (runtime), H2 (test)
+- Maven Wrapper (`mvnw`, `mvnw.cmd`)
+
+## Project Structure
+
+Main source: `src/main/java/com/edulearn`
+
+- `auth` - authentication and token flows
+- `course` - categories, courses, sections, lessons, enrollment, learning progress
+- `quiz` - quiz management, submission, history
+- `review` - rating/review and likes
+- `payment` - order and checkout flow
+- `chatbot` - AI conversation and messaging
+- `admin` - admin dashboard/statistics
+- `config`, `common`, `exception` - cross-cutting concerns
+
+Entry point:
+
+- `src/main/java/com/edulearn/EduLearnApplication.java`
+
+## Quick Start
+
+### 1) Prerequisites
 
 - JDK 17
-- MySQL 8+ (tao schema `edulearn`) | create `edulearn` schema
+- MySQL 8+ (schema `edulearn`)
 - Redis 6+
-- (Tuy chon / Optional) SMTP local: MailHog/Mailpit
+- Optional: MailHog/Mailpit for local SMTP
 
-Ghi chu / Note:
+Note:
 
-- App dung `ddl-auto=validate`, can schema hop le truoc khi start. | App uses `ddl-auto=validate`, so schema must exist before startup.
-- SQL schema da co tai `database/database_edulearn.sql`. | SQL schema is available at `database/database_edulearn.sql`.
+- VI: Ung dung dang dung `ddl-auto=validate`, can schema dung truoc khi startup.
+- EN: App uses `ddl-auto=validate`, so schema must be valid before startup.
+- SQL schema file: `database/database_edulearn.sql`
 
-## 2) Setup nhanh (env vars) | Quick env setup
+### 2) Prepare database
 
-Ban co the chay voi default values, hoac set cac bien chinh sau. | You can run with defaults, or set these key variables.
+```sql
+CREATE DATABASE edulearn CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE edulearn;
+SOURCE database/database_edulearn.sql;
+```
+
+### 3) Configure environment variables (minimum)
 
 - `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`
 - `JWT_SECRET`
 - `REDIS_HOST`, `REDIS_PORT`
-- `APP_EMAIL_ENABLED` (default `false`)
-- `ANTHROPIC_ENABLED`, `ANTHROPIC_API_KEY` (default chatbot mock mode)
+- Optional: `APP_EMAIL_ENABLED`, `ANTHROPIC_ENABLED`, `ANTHROPIC_API_KEY`
 
 PowerShell example:
 
@@ -37,14 +109,14 @@ $env:REDIS_HOST="localhost"
 $env:REDIS_PORT="6379"
 ```
 
-## 3) Run app
+### 4) Run application
 
 ```powershell
 cd E:\Profile\edulearn\spring-web
 .\mvnw.cmd spring-boot:run
 ```
 
-Run with dev profile:
+Run with `dev` profile:
 
 ```powershell
 cd E:\Profile\edulearn\spring-web
@@ -53,14 +125,14 @@ cd E:\Profile\edulearn\spring-web
 
 Default URL: `http://localhost:8080`
 
-## 4) Run tests
+## Run Tests
 
 ```powershell
 cd E:\Profile\edulearn\spring-web
 .\mvnw.cmd test
 ```
 
-Integration tests tieu bieu / Representative integration tests:
+Representative integration tests:
 
 - `src/test/java/com/edulearn/auth/AuthControllerIntegrationTest.java`
 - `src/test/java/com/edulearn/course/CoursePublishFlowIntegrationTest.java`
@@ -68,9 +140,9 @@ Integration tests tieu bieu / Representative integration tests:
 - `src/test/java/com/edulearn/quiz/QuizReviewIntegrationTest.java`
 - `src/test/java/com/edulearn/chatbot/ChatControllerIntegrationTest.java`
 
-## 5) Endpoint can biet ngay | Key endpoints
+## API Snapshot
 
-Public:
+Public endpoints:
 
 - `POST /api/v1/auth/register`
 - `POST /api/v1/auth/login`
@@ -81,7 +153,7 @@ Public:
 - `GET /api/v1/sections/{sectionId}/lessons`
 - `GET /api/v1/lessons/{lessonId}`
 
-JWT required:
+JWT required (examples):
 
 - `GET /api/v1/auth/me`
 - `POST /api/v1/courses/{courseId}/enrollments`
@@ -89,29 +161,38 @@ JWT required:
 - `POST /api/v1/chat/ask`
 - `GET /api/v1/admin/dashboard`
 
-Health:
+Health check:
 
 - `GET /actuator/health`
 
-## 6) Role matrix (tom tat) | Role matrix (summary)
+## Role Matrix
 
-- `ADMIN`: full access + `GET /api/v1/admin/dashboard`
-- `INSTRUCTOR`: CRUD course content + publish/archive + quiz management
-- `STUDENT`: enroll, learning progress, quiz, review, order, chatbot
+- `ADMIN`: full platform access + admin dashboard
+- `INSTRUCTOR`: manage own course content + publish/archive + quiz management
+- `STUDENT`: enroll, track progress, submit quiz, write review, use chatbot
 
-## 7) Troubleshooting nhanh | Quick troubleshooting
+## Troubleshooting
 
-- DB validate startup error:
-  - Chay schema trong `database/database_edulearn.sql`. | Run schema from `database/database_edulearn.sql`.
+- DB validation error on startup:
+  - VI: Import lai schema tu `database/database_edulearn.sql`.
+  - EN: Re-import schema from `database/database_edulearn.sql`.
 - Redis connection error:
-  - Kiem tra Redis service va `REDIS_HOST`/`REDIS_PORT`. | Check Redis service and `REDIS_HOST`/`REDIS_PORT`.
-- 401/403 on protected API:
-  - Login lai de lay access token moi; gui `Authorization: Bearer <token>`.
-  - Verify token role matches endpoint permission.
-- Claude API khong chay that / Claude not called:
-  - Set `ANTHROPIC_ENABLED=true` and `ANTHROPIC_API_KEY`.
+  - VI: Kiem tra Redis service va `REDIS_HOST`/`REDIS_PORT`.
+  - EN: Verify Redis service and `REDIS_HOST`/`REDIS_PORT`.
+- `401/403` on protected APIs:
+  - VI: Dang nhap lai, gui `Authorization: Bearer <token>`, va kiem tra role.
+  - EN: Re-login, send `Authorization: Bearer <token>`, and verify role permissions.
+- Claude API not called:
+  - VI: Bat `ANTHROPIC_ENABLED=true` va cung cap `ANTHROPIC_API_KEY`.
+  - EN: Set `ANTHROPIC_ENABLED=true` and provide `ANTHROPIC_API_KEY`.
+
+## Documentation
+
+- Quick start: `README.md`
+- Full technical guide: `README_FULL.md`
+- SQL schema: `database/database_edulearn.sql`
 
 ---
 
-Thu tu de chay nhanh / Fastest path:
-**Import DB schema -> Start Redis -> Run app -> Login -> Call module APIs**.
+Fast path:
+**Import DB schema -> Start Redis -> Run app -> Login -> Call APIs**
