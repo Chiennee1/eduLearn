@@ -1,24 +1,33 @@
 spring:
+  config:
+    import: optional:file:.env[.properties]
+
   application:
-    name: spring-web
+    name: ${SPRING_APPLICATION_NAME:edulearn}
   datasource:
-    url: ${DB_URL:jdbc:mysql://localhost:3306/edulearn?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Ho_Chi_Minh}
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:edulearn}?useSSL=${DB_USE_SSL:false}&requireSSL=${DB_REQUIRE_SSL:false}&allowPublicKeyRetrieval=${DB_ALLOW_PUBLIC_KEY_RETRIEVAL:true}&serverTimezone=${DB_TIMEZONE:UTC}&useUnicode=true&characterEncoding=utf8
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:root}
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: ${DB_DRIVER_CLASS_NAME:com.mysql.cj.jdbc.Driver}
+    hikari:
+      maximum-pool-size: ${DB_POOL_MAX_SIZE:10}
+      minimum-idle: ${DB_POOL_MIN_IDLE:2}
+      connection-timeout: ${DB_POOL_CONNECTION_TIMEOUT_MS:30000}
+      idle-timeout: ${DB_POOL_IDLE_TIMEOUT_MS:600000}
+      max-lifetime: ${DB_POOL_MAX_LIFETIME_MS:1800000}
   jpa:
     hibernate:
-      ddl-auto: validate
-    open-in-view: false
+      ddl-auto: ${JPA_DDL_AUTO:validate}
+    open-in-view: ${JPA_OPEN_IN_VIEW:false}
     properties:
       hibernate:
-        format_sql: true
+        format_sql: ${HIBERNATE_FORMAT_SQL:true}
   jackson:
-    time-zone: Asia/Ho_Chi_Minh
+    time-zone: ${JACKSON_TIME_ZONE:UTC}
   cache:
-    type: redis
+    type: ${CACHE_TYPE:redis}
     redis:
-      time-to-live: 5m
+      time-to-live: ${REDIS_CACHE_TTL:5m}
   data:
     redis:
       host: ${REDIS_HOST:localhost}
