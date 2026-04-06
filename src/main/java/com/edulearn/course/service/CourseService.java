@@ -56,6 +56,13 @@ public class CourseService {
     }
 
     @Transactional(readOnly = true)
+    public CourseResponse getPublishedCourseBySlug(String slug) {
+        Course course = courseRepository.findBySlugAndStatus(slug, CourseStatus.PUBLISHED)
+                .orElseThrow(() -> new ResourceNotFoundException("Course not found"));
+        return toResponse(course);
+    }
+
+    @Transactional(readOnly = true)
     public List<CourseResponse> getMyCourses(String actorEmail) {
         User actor = permissionService.getActor(actorEmail);
         permissionService.requireInstructorOrAdmin(actor);

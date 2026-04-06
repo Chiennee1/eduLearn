@@ -11,6 +11,8 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     boolean existsBySlugAndIdNot(String slug, Long id);
 
+    java.util.Optional<Course> findBySlugAndStatus(String slug, CourseStatus status);
+
     List<Course> findByStatusOrderByPublishedAtDesc(CourseStatus status);
 
     long countByStatus(CourseStatus status);

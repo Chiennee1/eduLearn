@@ -44,6 +44,11 @@ public class CourseController {
         return ResponseEntity.ok(ApiResponse.success("Course fetched", courseService.getPublishedCourseById(courseId)));
     }
 
+    @GetMapping("/slug/{slug}")
+    public ResponseEntity<ApiResponse<CourseResponse>> getPublishedCourseBySlug(@PathVariable String slug) {
+        return ResponseEntity.ok(ApiResponse.success("Course fetched by slug", courseService.getPublishedCourseBySlug(slug)));
+    }
+
     @PostMapping
     @PreAuthorize("hasAnyRole('INSTRUCTOR','ADMIN')")
     public ResponseEntity<ApiResponse<CourseResponse>> create(
