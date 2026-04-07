@@ -71,3 +71,22 @@ app:
     execution:
       enabled: ${EXECUTION_LOG_ENABLED:true}
       warn-threshold-ms: ${EXECUTION_LOG_WARN_THRESHOLD_MS:500}
+
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: never
+  health:
+    redis:
+      enabled: true
+
+logging:
+  level:
+    org.springframework.data.repository.config.RepositoryConfigurationDelegate: WARN
+    org.springframework.data.redis.core.convert.MappingRedisConverter: WARN
+    org.springframework.data.redis.repository.configuration: WARN
