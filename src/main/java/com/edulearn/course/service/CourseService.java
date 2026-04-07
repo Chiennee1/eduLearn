@@ -238,13 +238,16 @@ public class CourseService {
     }
 
     private CourseResponse toResponse(Course course) {
-        Set<Integer> categoryIds = course.getCategories().stream()
-                .map(Category::getId)
-                .collect(LinkedHashSet::new, Set::add, Set::addAll);
+        Set<Integer> categoryIds = new LinkedHashSet<>();
+        if (course.getCategories() != null) {
+            course.getCategories().stream()
+                    .map(Category::getId)
+                    .forEach(categoryIds::add);
+        }
 
         return CourseResponse.builder()
                 .id(course.getId())
-                .instructorId(course.getInstructor().getId())
+                .instructorId(course.getInstructor() != null ? course.getInstructor().getId() : null)
                 .title(course.getTitle())
                 .slug(course.getSlug())
                 .description(course.getDescription())
