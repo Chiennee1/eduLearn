@@ -247,8 +247,6 @@ CREATE TABLE quiz_answers (
     selected_option_id BIGINT NULL COMMENT 'NULL if skipped',
     CONSTRAINT pk_quiz_answers PRIMARY KEY (id),
     CONSTRAINT fk_qa_attempt  FOREIGN KEY (attempt_id)         REFERENCES quiz_attempts(id) ON DELETE CASCADE,
-    CONSTRAINT fk_qa_question FOREIGN KEY (question_id)        REFERENCES questions(id),
-    CONSTRAINT fk_qa_option   FOREIGN KEY (selected_option_id) REFERENCES answer_options(id),
     INDEX idx_quiz_answers_attempt (attempt_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -285,6 +283,10 @@ CREATE TABLE answer_options (
     CONSTRAINT fk_ao_question FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE CASCADE,
     INDEX idx_ao_question (question_id, order_index)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE quiz_answers
+    ADD CONSTRAINT fk_qa_question FOREIGN KEY (question_id) REFERENCES questions(id),
+    ADD CONSTRAINT fk_qa_option FOREIGN KEY (selected_option_id) REFERENCES answer_options(id);
 
 CREATE TABLE assignments (
     id           BIGINT       NOT NULL AUTO_INCREMENT,

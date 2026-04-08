@@ -27,7 +27,7 @@ public class AnthropicClient {
 
     public AnthropicReply generateReply(String systemPrompt, List<ChatMessage> history, String userMessage) {
         if (!properties.isEnabled()) {
-            return new AnthropicReply("[MOCK] " + userMessage, null);
+            return new AnthropicReply(buildFallbackReply(userMessage), null);
         }
         if (properties.getApiKey() == null || properties.getApiKey().isBlank()) {
             throw new BusinessException("Anthropic API key is missing", HttpStatus.SERVICE_UNAVAILABLE);
@@ -98,6 +98,10 @@ public class AnthropicClient {
             return outputTokens.asInt();
         }
         return null;
+    }
+
+    private String buildFallbackReply(String userMessage) {
+        return "AI service hien dang o che do fallback. Cau hoi cua ban da duoc ghi nhan: " + userMessage;
     }
 
     public record AnthropicReply(String text, Integer outputTokens) {
