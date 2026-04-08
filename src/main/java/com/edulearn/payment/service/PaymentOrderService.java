@@ -63,7 +63,7 @@ public class PaymentOrderService {
 
         order = orderRepository.save(order);
 
-        completeMockPayment(order);
+        completeInstantPayment(order, paymentMethod);
         EnrollmentResponse enrollment = enrollmentService.enroll(courseId, actorEmail);
 
         return OrderCheckoutResponse.builder()
@@ -81,20 +81,22 @@ public class PaymentOrderService {
                 .toList();
     }
 
-    private void completeMockPayment(Order order) {
+    private void completeInstantPayment(Order order, PaymentMethod paymentMethod) {
         order.setStatus(OrderStatus.COMPLETED);
-        order.setTransactionId("MOCK-" + UUID.randomUUID());
+        String transactionPrefix = paymentMethod != null ? paymentMethod.name() : "PAY";
+        order.setTransactionId(transactionPrefix + "-" + UUID.randomUUID());
         orderRepository.save(order);
     }
 
     private PaymentMethod resolvePaymentMethod(BigDecimal amount, PaymentMethod requestedMethod) {
         if (requestedMethod != null) {
             if (requestedMethod == PaymentMethod.FREE && amount.compareTo(BigDecimal.ZERO) > 0) {
-                throw new BusinessException("FREE method is only allowed for zero-price courses", HttpStatus.BAD_REQUEST);
+                throw new BusinessException("FREE method is only allowed for zero-price courses",
+                        HttpStatus.BAD_REQUEST);
             }
             return requestedMethod;
         }
-        return amount.compareTo(BigDecimal.ZERO) == 0 ? PaymentMethod.FREE : PaymentMethod.MOCK;
+        return amount.compareTo(BigDecimal.ZERO) == 0 ? PaymentMethod.FREE : PaymentMethod.MOMO;
     }
 
     private OrderResponse toResponse(Order order) {
@@ -114,4 +116,3 @@ public class PaymentOrderService {
                 .build();
     }
 }
-
