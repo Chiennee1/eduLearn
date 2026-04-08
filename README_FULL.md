@@ -14,7 +14,7 @@ Backend REST API cho nen tang hoc truc tuyen, gom cac domain:
 - Enrollment + learning progress + certificate
 - Quiz engine + quiz history filter/pagination
 - Review/rating + like/unlike + course stats
-- Payment order checkout (mock payment flow)
+- Payment order checkout (instant completion flow)
 - AI chatbot (conversation/message + Anthropic integration + SSE stream)
 - Admin dashboard statistics
 
@@ -215,7 +215,7 @@ Controller: `src/main/java/com/edulearn/payment/controller/OrderController.java`
 
 Key feature notes:
 
-- `PaymentOrderService.checkoutEnrollment(...)` wraps order + payment-complete(mock) + enroll
+- `PaymentOrderService.checkoutEnrollment(...)` wraps order + payment-complete + enroll
 - Uses transaction boundary in service
 
 ### 7.7 Admin (`admin`)

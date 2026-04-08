@@ -72,7 +72,7 @@ class PaymentOrderAndAdminDashboardIntegrationTest {
 		mockMvc.perform(post("/api/v1/courses/{courseId}/orders", courseId)
 						.header("Authorization", "Bearer " + studentToken)
 						.contentType(MediaType.APPLICATION_JSON)
-						.content(objectMapper.writeValueAsString(Map.of("paymentMethod", "MOCK"))))
+						.content(objectMapper.writeValueAsString(Map.of("paymentMethod", "MOMO"))))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.data.order.status").value("COMPLETED"))
 				.andExpect(jsonPath("$.data.enrollment.status").value("ACTIVE"));
