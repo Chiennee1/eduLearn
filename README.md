@@ -30,6 +30,8 @@ Backend REST API cho nen tang hoc truc tuyen, bao gom auth, quan ly khoa hoc, en
 
 - VI: Auth + JWT + refresh token + role-based authorization (`ADMIN`, `INSTRUCTOR`, `STUDENT`).
 - EN: Auth + JWT + refresh token + role-based authorization (`ADMIN`, `INSTRUCTOR`, `STUDENT`).
+- VI: Ho tro dang nhap social OAuth2 (Google/GitHub), callback tra access token + refresh token ve Frontend.
+- EN: Supports OAuth2 social login (Google/GitHub) with callback that returns access + refresh tokens to Frontend.
 - VI: Course module day du (`category/course/section/lesson`) + publish flow.
 - EN: Full course module (`category/course/section/lesson`) + publish flow.
 - VI: Enrollment + learning progress + certificate generation.
@@ -95,7 +97,10 @@ SOURCE database/database_edulearn.sql;
 
 - `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`
 - `JWT_SECRET`
-- `REDIS_HOST`, `REDIS_PORT`
+- `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`
+- `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`
+- Optional callback targets: `APP_OAUTH2_REDIRECT_URI`, `APP_OAUTH2_FAILURE_URI`
+- Optional Redis settings (only when enabling Redis cache/session): `REDIS_HOST`, `REDIS_PORT`, `CACHE_TYPE=redis`, `SPRING_SESSION_STORE_TYPE=redis`
 - Optional: `APP_EMAIL_ENABLED`, `ANTHROPIC_ENABLED`, `ANTHROPIC_API_KEY`
 
 PowerShell example:
@@ -105,8 +110,25 @@ $env:DB_URL="jdbc:mysql://localhost:3306/edulearn?useSSL=false&allowPublicKeyRet
 $env:DB_USERNAME="root"
 $env:DB_PASSWORD="root"
 $env:JWT_SECRET="replace-with-your-strong-secret-at-least-32-bytes"
+$env:GOOGLE_CLIENT_ID="your-google-client-id"
+$env:GOOGLE_CLIENT_SECRET="your-google-client-secret"
+$env:GITHUB_CLIENT_ID="your-github-client-id"
+$env:GITHUB_CLIENT_SECRET="your-github-client-secret"
+$env:APP_OAUTH2_REDIRECT_URI="http://localhost:5173/auth/social/callback"
+```
+
+Defaults in this project now:
+
+- `CACHE_TYPE=simple` (no Redis required for cache)
+- `SPRING_SESSION_STORE_TYPE=none` (OAuth2 session stored in container memory)
+
+If you want full Redis-backed cache + session:
+
+```powershell
 $env:REDIS_HOST="localhost"
 $env:REDIS_PORT="6379"
+$env:CACHE_TYPE="redis"
+$env:SPRING_SESSION_STORE_TYPE="redis"
 ```
 
 ### 4) Run application
@@ -152,6 +174,8 @@ Public endpoints:
 - `GET /api/v1/courses/{courseId}/sections`
 - `GET /api/v1/sections/{sectionId}/lessons`
 - `GET /api/v1/lessons/{lessonId}`
+- `GET /oauth2/authorization/google`
+- `GET /oauth2/authorization/github`
 
 JWT required (examples):
 

@@ -34,7 +34,7 @@ public class ChatbotService {
     private final CourseRepository courseRepository;
     private final EnrollmentRepository enrollmentRepository;
     private final CoursePermissionService coursePermissionService;
-    private final AnthropicClient anthropicClient;
+    private final GeminiClient geminiClient;
     private final ChatRateLimiterService rateLimiterService;
 
     @Transactional
@@ -52,14 +52,24 @@ public class ChatbotService {
 
         List<ChatMessage> history = messageRepository.findByConversationIdOrderByCreatedAtAsc(conversation.getId());
         String systemPrompt = buildSystemPrompt(conversation.getCourse());
-        AnthropicClient.AnthropicReply anthropicReply = anthropicClient
-                .generateReply(systemPrompt, history, userMessage.getContent());
+        String assistantContent;
+        Integer outputTokens = null;
+        try {
+            GeminiClient.GeminiReply geminiReply = geminiClient
+                    .generateReply(systemPrompt, history, userMessage.getContent());
+            assistantContent = geminiReply.text();
+            outputTokens = geminiReply.outputTokens();
+        } catch (BusinessException ex) {
+            assistantContent = buildAssistantFallbackReply(ex.getMessage());
+        } catch (Exception ex) {
+            assistantContent = buildAssistantFallbackReply("AI service unavailable");
+        }
 
         ChatMessage assistantMessage = messageRepository.save(ChatMessage.builder()
                 .conversation(conversation)
                 .role(ChatRole.ASSISTANT)
-                .content(anthropicReply.text())
-                .tokensUsed(anthropicReply.outputTokens())
+                .content(assistantContent)
+                .tokensUsed(outputTokens)
                 .build());
 
         conversation.setUpdatedAt(LocalDateTime.now());
@@ -177,6 +187,30 @@ public class ChatbotService {
                 + "- Description: " + description;
     }
 
+    private String buildAssistantFallbackReply(String reason) {
+        if (reason == null || reason.isBlank()) {
+            return "Xin loi, he thong AI tam thoi khong phan hoi. Vui long thu lai sau.";
+        }
+
+        String normalizedReason = reason.replaceAll("\\s+", " ").trim();
+        String lowerReason = normalizedReason.toLowerCase();
+
+        if (lowerReason.contains("quota") || lowerReason.contains("rate limit")) {
+            return "Xin loi, he thong AI hien da het han muc su dung. Vui long thu lai sau hoac lien he quan tri vien de cap them quota.";
+        }
+
+        if (lowerReason.contains("api key") || lowerReason.contains("permission")
+                || lowerReason.contains("unauthorized")) {
+            return "Xin loi, cau hinh API key AI chua hop le. Vui long lien he quan tri vien de kiem tra lai cau hinh.";
+        }
+
+        if (lowerReason.contains("timeout") || lowerReason.contains("network")) {
+            return "Xin loi, ket noi toi dich vu AI dang bi gian doan. Vui long thu lai sau.";
+        }
+
+        return "Xin loi, hien tai khong the ket noi AI. Vui long thu lai sau.";
+    }
+
     public List<String> chunkForStreaming(String reply) {
         String[] words = reply.split("\\s+");
         java.util.ArrayList<String> chunks = new java.util.ArrayList<>();
@@ -201,4 +235,3 @@ public class ChatbotService {
         return chunks;
     }
 }
-

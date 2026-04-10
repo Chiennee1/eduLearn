@@ -2,6 +2,8 @@ package com.edulearn.course.dto;
 
 import com.edulearn.course.entity.CourseLevel;
 import com.edulearn.course.entity.CourseStatus;
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -10,7 +12,10 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class CourseResponse {
+public class CourseResponse implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     private final Long id;
     private final Long instructorId;
@@ -28,4 +33,3 @@ public class CourseResponse {
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 }
-

@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import static org.hamcrest.Matchers.hasItem;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -42,6 +43,9 @@ class AuthControllerIntegrationTest {
         if (roleRepository.findByName(RoleName.STUDENT).isEmpty()) {
             roleRepository.save(Role.builder().name(RoleName.STUDENT).description("Student").build());
         }
+        if (roleRepository.findByName(RoleName.INSTRUCTOR).isEmpty()) {
+            roleRepository.save(Role.builder().name(RoleName.INSTRUCTOR).description("Instructor").build());
+        }
     }
 
     @Test
@@ -52,25 +56,24 @@ class AuthControllerIntegrationTest {
         registerRequest.setFullName("Student One");
 
         mockMvc.perform(
-                        post("/api/v1/auth/register")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(registerRequest))
-                )
+                post("/api/v1/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(registerRequest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data.accessToken").isNotEmpty())
                 .andExpect(jsonPath("$.data.refreshToken").isNotEmpty())
-                .andExpect(jsonPath("$.data.user.email").value("student1@edulearn.com"));
+                .andExpect(jsonPath("$.data.user.email").value("student1@edulearn.com"))
+                .andExpect(jsonPath("$.data.user.roles", hasItem("STUDENT")));
 
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setEmail("student1@edulearn.com");
         loginRequest.setPassword("123456");
 
         MvcResult loginResult = mockMvc.perform(
-                        post("/api/v1/auth/login")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(loginRequest))
-                )
+                post("/api/v1/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data.accessToken").isNotEmpty())
@@ -84,13 +87,30 @@ class AuthControllerIntegrationTest {
         refreshTokenRequest.setRefreshToken(refreshToken);
 
         mockMvc.perform(
-                        post("/api/v1/auth/refresh")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(refreshTokenRequest))
-                )
+                post("/api/v1/auth/refresh")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(refreshTokenRequest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data.accessToken").isNotEmpty())
                 .andExpect(jsonPath("$.data.refreshToken").isNotEmpty());
+    }
+
+    @Test
+    void register_withInstructorRole_shouldAssignInstructor() throws Exception {
+        RegisterRequest registerRequest = new RegisterRequest();
+        registerRequest.setEmail("instructor1@edulearn.com");
+        registerRequest.setPassword("123456");
+        registerRequest.setFullName("Instructor One");
+        registerRequest.setRole("INSTRUCTOR");
+
+        mockMvc.perform(
+                post("/api/v1/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(registerRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.data.user.email").value("instructor1@edulearn.com"))
+                .andExpect(jsonPath("$.data.user.roles", hasItem("INSTRUCTOR")));
     }
 }

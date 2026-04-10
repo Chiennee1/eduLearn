@@ -16,6 +16,7 @@ import com.edulearn.course.repository.SectionRepository;
 import com.edulearn.exception.BusinessException;
 import com.edulearn.exception.ResourceNotFoundException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -40,10 +41,10 @@ public class CourseService {
     @Transactional(readOnly = true)
     @Cacheable(value = Constants.CACHE_PUBLISHED_COURSES, key = "'all'")
     public List<CourseResponse> getPublishedCourses() {
-        return courseRepository.findByStatusOrderByPublishedAtDesc(CourseStatus.PUBLISHED)
+        return new ArrayList<>(courseRepository.findByStatusOrderByPublishedAtDesc(CourseStatus.PUBLISHED)
                 .stream()
                 .map(this::toResponse)
-                .toList();
+                .toList());
     }
 
     @Transactional(readOnly = true)
@@ -159,12 +160,14 @@ public class CourseService {
 
         long sectionCount = sectionRepository.countByCourseId(courseId);
         if (sectionCount == 0) {
-            throw new BusinessException("Course must have at least one section before publishing", HttpStatus.BAD_REQUEST);
+            throw new BusinessException("Course must have at least one section before publishing",
+                    HttpStatus.BAD_REQUEST);
         }
 
         List<Long> invalidSectionIds = sectionRepository.findSectionIdsWithoutLessons(courseId);
         if (!invalidSectionIds.isEmpty()) {
-            throw new BusinessException("Each section must have at least one lesson before publishing", HttpStatus.BAD_REQUEST);
+            throw new BusinessException("Each section must have at least one lesson before publishing",
+                    HttpStatus.BAD_REQUEST);
         }
 
         course.setStatus(CourseStatus.PUBLISHED);
@@ -264,4 +267,3 @@ public class CourseService {
                 .build();
     }
 }
-

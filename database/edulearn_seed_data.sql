@@ -2,27 +2,27 @@ USE edulearn;
 
 INSERT INTO users (id, email, password_hash, full_name, avatar_url, status, email_verified) VALUES
 -- ADMIN
-(1,  'admin@edulearn.vn',       '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhy', 'Admin EduLearn',     'https://api.dicebear.com/7.x/avataaars/svg?seed=admin',       'ACTIVE', TRUE),
-(2,  'superadmin@edulearn.vn',  '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhy', 'Super Admin',        'https://api.dicebear.com/7.x/avataaars/svg?seed=superadmin',  'ACTIVE', TRUE),
+(1,  'admin@edulearn.vn',       '$2b$10$1aQv5v5DF6/2cWolDDpYyuS2s0aHJU.CWy28yBDDaltVpLGG2W1nC', 'Admin EduLearn',     'https://api.dicebear.com/7.x/avataaars/svg?seed=admin',       'ACTIVE', TRUE),
+(2,  'superadmin@edulearn.vn',  '$2b$10$1aQv5v5DF6/2cWolDDpYyuS2s0aHJU.CWy28yBDDaltVpLGG2W1nC', 'Super Admin',        'https://api.dicebear.com/7.x/avataaars/svg?seed=superadmin',  'ACTIVE', TRUE),
 
 -- INSTRUCTOR
-(3,  'nguyen.van.hung@gmail.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhy', 'Nguyễn Văn Hùng',   'https://api.dicebear.com/7.x/avataaars/svg?seed=hung',      'ACTIVE', TRUE),
-(4,  'tran.thi.lan@gmail.com',   '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhy', 'Trần Thị Lan',      'https://api.dicebear.com/7.x/avataaars/svg?seed=lan',       'ACTIVE', TRUE),
-(5,  'le.minh.duc@gmail.com',    '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhy', 'Lê Minh Đức',       'https://api.dicebear.com/7.x/avataaars/svg?seed=duc',       'ACTIVE', TRUE),
-(6,  'pham.quoc.bao@gmail.com',  '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhy', 'Phạm Quốc Bảo',    'https://api.dicebear.com/7.x/avataaars/svg?seed=bao',       'ACTIVE', TRUE),
+(3,  'nguyen.van.hung@gmail.com', '$2b$10$1aQv5v5DF6/2cWolDDpYyuS2s0aHJU.CWy28yBDDaltVpLGG2W1nC', 'Nguyễn Văn Hùng',   'https://api.dicebear.com/7.x/avataaars/svg?seed=hung',      'ACTIVE', TRUE),
+(4,  'tran.thi.lan@gmail.com',   '$2b$10$1aQv5v5DF6/2cWolDDpYyuS2s0aHJU.CWy28yBDDaltVpLGG2W1nC', 'Trần Thị Lan',      'https://api.dicebear.com/7.x/avataaars/svg?seed=lan',       'ACTIVE', TRUE),
+(5,  'le.minh.duc@gmail.com',    '$2b$10$1aQv5v5DF6/2cWolDDpYyuS2s0aHJU.CWy28yBDDaltVpLGG2W1nC', 'Lê Minh Đức',       'https://api.dicebear.com/7.x/avataaars/svg?seed=duc',       'ACTIVE', TRUE),
+(6,  'pham.quoc.bao@gmail.com',  '$2b$10$1aQv5v5DF6/2cWolDDpYyuS2s0aHJU.CWy28yBDDaltVpLGG2W1nC', 'Phạm Quốc Bảo',    'https://api.dicebear.com/7.x/avataaars/svg?seed=bao',       'ACTIVE', TRUE),
 
 -- STUDENT
-(7,  'student01@gmail.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhy', 'Hoàng Văn An',    'https://api.dicebear.com/7.x/avataaars/svg?seed=an',     'ACTIVE', TRUE),
-(8,  'student02@gmail.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhy', 'Lý Thị Bình',     'https://api.dicebear.com/7.x/avataaars/svg?seed=binh',   'ACTIVE', TRUE),
-(9,  'student03@gmail.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhy', 'Đặng Văn Cường',  'https://api.dicebear.com/7.x/avataaars/svg?seed=cuong',  'ACTIVE', TRUE),
-(10, 'student04@gmail.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhy', 'Bùi Thị Dung',    'https://api.dicebear.com/7.x/avataaars/svg?seed=dung',   'ACTIVE', TRUE),
-(11, 'student05@gmail.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhy', 'Vũ Minh Hoàng',   'https://api.dicebear.com/7.x/avataaars/svg?seed=hoang',  'ACTIVE', TRUE),
-(12, 'student06@gmail.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhy', 'Đinh Thị Hoa',    'https://api.dicebear.com/7.x/avataaars/svg?seed=hoa',    'ACTIVE', TRUE),
-(13, 'student07@gmail.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhy', 'Cao Văn Khánh',   'https://api.dicebear.com/7.x/avataaars/svg?seed=khanh',  'ACTIVE', TRUE),
-(14, 'student08@gmail.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhy', 'Mai Thị Linh',    'https://api.dicebear.com/7.x/avataaars/svg?seed=linh',   'ACTIVE', TRUE),
-(15, 'student09@gmail.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhy', 'Trương Văn Nam',  'https://api.dicebear.com/7.x/avataaars/svg?seed=nam',    'ACTIVE', TRUE),
-(16, 'student10@gmail.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhy', 'Ngô Thị Phương',  'https://api.dicebear.com/7.x/avataaars/svg?seed=phuong', 'ACTIVE', TRUE),
-(17, 'banned01@gmail.com',  '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhy', 'User Bị Khóa',    NULL,                                                     'BANNED', FALSE);
+(7,  'student01@gmail.com', '$2b$10$1aQv5v5DF6/2cWolDDpYyuS2s0aHJU.CWy28yBDDaltVpLGG2W1nC', 'Hoàng Văn An',    'https://api.dicebear.com/7.x/avataaars/svg?seed=an',     'ACTIVE', TRUE),
+(8,  'student02@gmail.com', '$2b$10$1aQv5v5DF6/2cWolDDpYyuS2s0aHJU.CWy28yBDDaltVpLGG2W1nC', 'Lý Thị Bình',     'https://api.dicebear.com/7.x/avataaars/svg?seed=binh',   'ACTIVE', TRUE),
+(9,  'student03@gmail.com', '$2b$10$1aQv5v5DF6/2cWolDDpYyuS2s0aHJU.CWy28yBDDaltVpLGG2W1nC', 'Đặng Văn Cường',  'https://api.dicebear.com/7.x/avataaars/svg?seed=cuong',  'ACTIVE', TRUE),
+(10, 'student04@gmail.com', '$2b$10$1aQv5v5DF6/2cWolDDpYyuS2s0aHJU.CWy28yBDDaltVpLGG2W1nC', 'Bùi Thị Dung',    'https://api.dicebear.com/7.x/avataaars/svg?seed=dung',   'ACTIVE', TRUE),
+(11, 'student05@gmail.com', '$2b$10$1aQv5v5DF6/2cWolDDpYyuS2s0aHJU.CWy28yBDDaltVpLGG2W1nC', 'Vũ Minh Hoàng',   'https://api.dicebear.com/7.x/avataaars/svg?seed=hoang',  'ACTIVE', TRUE),
+(12, 'student06@gmail.com', '$2b$10$1aQv5v5DF6/2cWolDDpYyuS2s0aHJU.CWy28yBDDaltVpLGG2W1nC', 'Đinh Thị Hoa',    'https://api.dicebear.com/7.x/avataaars/svg?seed=hoa',    'ACTIVE', TRUE),
+(13, 'student07@gmail.com', '$2b$10$1aQv5v5DF6/2cWolDDpYyuS2s0aHJU.CWy28yBDDaltVpLGG2W1nC', 'Cao Văn Khánh',   'https://api.dicebear.com/7.x/avataaars/svg?seed=khanh',  'ACTIVE', TRUE),
+(14, 'student08@gmail.com', '$2b$10$1aQv5v5DF6/2cWolDDpYyuS2s0aHJU.CWy28yBDDaltVpLGG2W1nC', 'Mai Thị Linh',    'https://api.dicebear.com/7.x/avataaars/svg?seed=linh',   'ACTIVE', TRUE),
+(15, 'student09@gmail.com', '$2b$10$1aQv5v5DF6/2cWolDDpYyuS2s0aHJU.CWy28yBDDaltVpLGG2W1nC', 'Trương Văn Nam',  'https://api.dicebear.com/7.x/avataaars/svg?seed=nam',    'ACTIVE', TRUE),
+(16, 'student10@gmail.com', '$2b$10$1aQv5v5DF6/2cWolDDpYyuS2s0aHJU.CWy28yBDDaltVpLGG2W1nC', 'Ngô Thị Phương',  'https://api.dicebear.com/7.x/avataaars/svg?seed=phuong', 'ACTIVE', TRUE),
+(17, 'banned01@gmail.com',  '$2b$10$1aQv5v5DF6/2cWolDDpYyuS2s0aHJU.CWy28yBDDaltVpLGG2W1nC', 'User Bị Khóa',    NULL,                                                     'BANNED', FALSE);
 
 
 -- ============================================================

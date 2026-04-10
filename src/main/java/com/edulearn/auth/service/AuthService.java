@@ -14,6 +14,7 @@ import com.edulearn.auth.repository.UserRepository;
 import com.edulearn.auth.security.UserPrincipal;
 import com.edulearn.exception.BusinessException;
 import com.edulearn.exception.ResourceNotFoundException;
+import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -41,20 +43,19 @@ public class AuthService {
 
     @Transactional
     public TokenResponse register(RegisterRequest request) {
-        if (userRepository.existsByEmail(request.getEmail())) {
+        String normalizedEmail = request.getEmail().trim().toLowerCase();
+        if (userRepository.existsByEmail(normalizedEmail)) {
             throw new BusinessException("Email already exists", HttpStatus.CONFLICT);
         }
-
-        Role defaultRole = roleRepository.findByName(RoleName.STUDENT)
-                .orElseThrow(() -> new ResourceNotFoundException("Default role STUDENT not found"));
+        Role selectedRole = resolveRegistrationRole(request.getRole());
 
         User user = User.builder()
-                .email(request.getEmail().trim().toLowerCase())
+                .email(normalizedEmail)
                 .passwordHash(passwordEncoder.encode(request.getPassword()))
                 .fullName(request.getFullName().trim())
                 .status(UserStatus.ACTIVE)
                 .emailVerified(false)
-                .roles(Set.of(defaultRole))
+                .roles(Set.of(selectedRole))
                 .build();
         userRepository.save(user);
 
@@ -62,6 +63,24 @@ public class AuthService {
         String accessToken = jwtService.generateAccessToken(principal);
         RefreshToken refreshToken = refreshTokenService.createToken(user);
         return toTokenResponse(user, accessToken, jwtService.getAccessTokenExpiry(accessToken), refreshToken);
+    }
+
+    private Role resolveRegistrationRole(String requestedRole) {
+        RoleName roleName = RoleName.STUDENT;
+        if (StringUtils.hasText(requestedRole)) {
+            try {
+                roleName = RoleName.valueOf(requestedRole.trim().toUpperCase(Locale.ROOT));
+            } catch (IllegalArgumentException ex) {
+                throw new BusinessException("Role must be STUDENT or INSTRUCTOR", HttpStatus.BAD_REQUEST);
+            }
+            if (roleName != RoleName.STUDENT && roleName != RoleName.INSTRUCTOR) {
+                throw new BusinessException("Role must be STUDENT or INSTRUCTOR", HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        RoleName resolvedRoleName = roleName;
+        return roleRepository.findByName(resolvedRoleName)
+                .orElseThrow(() -> new ResourceNotFoundException("Role " + resolvedRoleName + " not found"));
     }
 
     @Transactional
@@ -72,8 +91,8 @@ public class AuthService {
 
         try {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getEmail().trim().toLowerCase(), request.getPassword())
-            );
+                    new UsernamePasswordAuthenticationToken(request.getEmail().trim().toLowerCase(),
+                            request.getPassword()));
             UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
             String accessToken = jwtService.generateAccessToken(principal);
             RefreshToken refreshToken = refreshTokenService.createToken(user);
@@ -111,8 +130,7 @@ public class AuthService {
             User user,
             String accessToken,
             java.time.LocalDateTime accessTokenExpiresAt,
-            RefreshToken refreshToken
-    ) {
+            RefreshToken refreshToken) {
         return TokenResponse.builder()
                 .tokenType("Bearer")
                 .accessToken(accessToken)
