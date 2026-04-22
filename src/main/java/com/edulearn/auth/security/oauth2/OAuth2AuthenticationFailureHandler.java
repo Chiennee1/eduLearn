@@ -15,7 +15,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequiredArgsConstructor
 public class OAuth2AuthenticationFailureHandler implements AuthenticationFailureHandler {
 
-    @Value("${app.oauth2.failure-uri:http://localhost:5173/login}")
+    @Value("${app.oauth2.failure-uri:http://localhost:3000/login}")
     private String failureRedirectUri;
 
     @Override

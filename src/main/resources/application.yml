@@ -1,6 +1,6 @@
 spring:
   config:
-    import: optional:file:.env.docker[.properties],optional:file:.env[.properties]
+    import: optional:file:.env[.properties]
 
   security:
     oauth2:
@@ -95,5 +95,5 @@ app:
       enabled: ${EXECUTION_LOG_ENABLED:true}
       warn-threshold-ms: ${EXECUTION_LOG_WARN_THRESHOLD_MS:500}
   oauth2:
-    redirect-uri: ${APP_OAUTH2_REDIRECT_URI:http://localhost:5173/auth/social/callback}
-    failure-uri: ${APP_OAUTH2_FAILURE_URI:http://localhost:5173/login}
+    redirect-uri: ${APP_OAUTH2_REDIRECT_URI:http://localhost:3000/auth/social/callback}
+    failure-uri: ${APP_OAUTH2_FAILURE_URI:http://localhost:3000/login}

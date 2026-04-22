@@ -25,10 +25,10 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
 
     private final SocialAuthService socialAuthService;
 
-    @Value("${app.oauth2.redirect-uri:http://localhost:5173/auth/social/callback}")
+    @Value("${app.oauth2.redirect-uri:http://localhost:3000/auth/social/callback}")
     private String successRedirectUri;
 
-    @Value("${app.oauth2.failure-uri:http://localhost:5173/login}")
+    @Value("${app.oauth2.failure-uri:http://localhost:3000/login}")
     private String failureRedirectUri;
 
     @Override
